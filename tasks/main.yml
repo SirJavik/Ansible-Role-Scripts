@@ -1,0 +1,36 @@
+- name: Copy sbin scripts
+  ansible.builtin.copy:
+    src: ./files/usr/local/sbin/{{ item }}
+    dest: /usr/local/sbin/{{ item }}
+    owner: root
+    group: root
+    mode: '0751'
+  loop: "{{ javikweb_scripts.sbin }}"
+  when: javikweb_scripts.sbin is defined
+
+- name: Copy bin scripts
+  ansible.builtin.copy:
+    src: ./files/usr/local/bin/{{ item }}
+    dest: /usr/local/bin/{{ item }}
+    owner: root
+    group: root
+    mode: '0751'
+  loop: "{{ javikweb_scripts.bin }}"
+  when: javikweb_scripts.bin is defined
+
+- name: Copy all bin scripts
+  ansible.posix.synchronize:
+    src: ./files/usr/local/bin
+    dest: /usr/local/bin
+    owner: false
+    group: false
+  when: javikweb_scripts.bin is not defined
+
+- name: Copy all sbin scripts
+  ansible.posix.synchronize:
+    src: ./files/usr/local/sbin/
+    dest: /usr/local/sbin
+    owner: false
+    group: false
+  when: javikweb_scripts.sbin is not defined
+
